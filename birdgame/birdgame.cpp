@@ -6,12 +6,12 @@
 #include <windows.h>
 #include <time.h>
 
-#define SCREEN_WIDTH 90
-#define SCREEN_HEIGHT 26
-#define WIN_WIDTH 70
-#define MENU_WIDTH 20
-#define GAP_SIZE 7
-#define PIPE_DIF 45
+#define SCREEN_WIDTH 90 //full window width
+#define SCREEN_HEIGHT 26 // full window height
+#define WIN_WIDTH 70  // size of playing screen
+#define MENU_WIDTH 20 // right window width MENU_WIDTH = SCREEN_WIDTH - WIN_WIDTH
+#define GAP_SIZE 7 // gap size in 1 pipe
+#define PIPE_DIF 45 //distance between pipes
 
 using namespace std;
 
@@ -23,27 +23,15 @@ int gapPos[3];
 int pipeFlag[3];
 char bird[2][6] = { '/','-','-','o','\\',' ',
 					'|','_','_','_',' ','>' };
-int birdPos = 6;
+int birdPos = 6; //Coordinates of top left corner of bird = (0, birdPos)
 int score = 0;
 int highscore = -1;
 
-void gotoxy(int x, int y){
-	CursorPosition.X = x;
-	CursorPosition.Y = y;
+void gotoxy(int col, int row){
+	CursorPosition.X = col;
+	CursorPosition.Y = row;
 	SetConsoleCursorPosition(console, CursorPosition);
 }
-
-void setcursor(bool visible, DWORD size)
-{
-	if (size == 0)
-		size = 20;
-
-	CONSOLE_CURSOR_INFO lpCursor;
-	lpCursor.bVisible = visible;
-	lpCursor.dwSize = size;
-	SetConsoleCursorInfo(console, &lpCursor);
-}
-
 void drawBorder() {
 
 	for (int i = 0; i < SCREEN_WIDTH; i++) {
@@ -65,6 +53,7 @@ void drawBorder() {
 
 
 }
+
 void genPipe(int ind) {
 	gapPos[ind] = 3 + rand() % 14;
 }
@@ -187,7 +176,7 @@ void play() {
 		eraseBird();
 		erasePipe(0);
 		erasePipe(1);
-		birdPos += 1;
+		birdPos += 1; //gravity effect : bird falls 1 unit down 
 
 		if (birdPos > SCREEN_HEIGHT - 2) { //if bird touches bottom of screen
 			gameover();
@@ -227,8 +216,17 @@ void hidecursor()
 int main()
 {
 	hidecursor(); //add to loop in play() if screen is resized.
-	setcursor(0, 0);
 	srand((unsigned)time(NULL));
+	drawBorder();
+	drawBird();
+
+	pipeFlag[0] = 1;
+	pipeFlag[1] = 0;
+	pipePos[0] = pipePos[1] = 4;
+	drawPipe(0);
+	gotoxy( 0, SCREEN_HEIGHT + 1);
+	system("pause");
+
 	do {
 		system("cls");
 		//gotoxy(10, 5); cout << " -------------------------- ";
