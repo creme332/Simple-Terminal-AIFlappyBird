@@ -12,15 +12,17 @@
 #define MENU_WIDTH 20 // right window width MENU_WIDTH = SCREEN_WIDTH - WIN_WIDTH
 #define GAP_SIZE 7 // gap size in 1 pipe
 #define PIPE_DIF 45 //distance between pipes
+#define BIRD_WIDTH 6 //bird occupies 6 cells horizontally
+#define PIPE_WIDTH 3 //pipe is 3 units wide
 
 using namespace std;
 
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
-int pipePos[3];
-int gapPos[3];
-int pipeFlag[3];
+int pipePos[2]; //
+int gapPos[2];
+int pipeFlag[2];
 char bird[2][6] = { '/','-','-','o','\\',' ',
 					'|','_','_','_',' ','>' };
 int birdPos = 6; //Coordinates of top left corner of bird = (0, birdPos)
@@ -33,10 +35,10 @@ void gotoxy(int col, int row){
 	SetConsoleCursorPosition(console, CursorPosition);
 }
 void drawBorder() {
-
+	
 	for (int i = 0; i < SCREEN_WIDTH; i++) {
-		gotoxy(i, 0); cout << "-";
-		gotoxy(i, SCREEN_HEIGHT); cout << "-";
+		gotoxy(i, 0); cout << "#";
+		gotoxy(i, SCREEN_HEIGHT); cout << "#";
 	}
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++) {
@@ -60,10 +62,10 @@ void genPipe(int ind) {
 void drawPipe(int ind) {
 	if (pipeFlag[ind] == true) {
 		for (int i = 0; i < gapPos[ind]; i++) { //draw top part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "***";
+			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
 		}
 		for (int i = gapPos[ind] + GAP_SIZE; i < SCREEN_HEIGHT - 1; i++) { //draw bottom part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "***";
+			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
 		}
 	}
 }
@@ -93,9 +95,14 @@ void eraseBird() {
 	}
 }
 
-int collision() { 
-	//MUST REVIEW : collision occurs when BOTTOM/TOP/FRONT/BACK part of bird hits pipe
-	if (pipePos[0] >= 61) {
+bool collision() { 
+	if (birdPos <= 1) { //if bird touches top part of screen
+		return 1;
+	}
+	if (birdPos > SCREEN_HEIGHT - 2) { //if bird touches bottom of screen
+		return 1;
+	}
+	if (pipePos[0] >= WIN_WIDTH-BIRD_WIDTH) { //bird in pipe gap
 		if (birdPos<gapPos[0] || birdPos >gapPos[0] + GAP_SIZE) {
 			return 1;
 		}
@@ -111,8 +118,10 @@ void gameover() {
 	gotoxy(WIN_WIDTH + 6, 8);cout << "HighScore: " << highscore;
 	gotoxy(WIN_WIDTH + 8, 10);cout << "Press 1";
 	while (1) {
-		char k = _getch();
-		if (k == '1')break;
+		if (_kbhit()) {
+			char k = _getch();
+			if (k == '1')break;
+		}
 	}
 
 }
@@ -157,31 +166,27 @@ void play() {
 		if (_kbhit()) {
 			char ch = _getch();
 			if (ch == 32) { //space bar
-				if (birdPos > 3) //max height of bird 
-					birdPos -= 3; //bird jumps 3 units up
+				birdPos -= 3; //bird jumps 3 units up
 			}
 			if (ch == 27) { //escape key to exit game
 				break;
 			}
 		}
 
-		drawBird();
 		drawPipe(0);
 		drawPipe(1);
+		drawBird();
+
 		if (collision() == 1) {
 			gameover();
 			return;
 		}
+
 		Sleep(100);
 		eraseBird();
 		erasePipe(0);
 		erasePipe(1);
 		birdPos += 1; //gravity effect : bird falls 1 unit down 
-
-		if (birdPos > SCREEN_HEIGHT - 2) { //if bird touches bottom of screen
-			gameover();
-			return;
-		}
 
 		if (pipeFlag[0] == 1)
 			pipePos[0] += 2;
@@ -217,8 +222,9 @@ int main()
 {
 	hidecursor(); //add to loop in play() if screen is resized.
 	srand((unsigned)time(NULL));
+	//TESTING: REMOVE
 	drawBorder();
-	drawBird();
+	//drawBird();
 
 	pipeFlag[0] = 1;
 	pipeFlag[1] = 0;
