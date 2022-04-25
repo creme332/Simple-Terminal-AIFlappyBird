@@ -1,4 +1,4 @@
 ﻿  birdgame.cpp
 C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(63,23): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(73,23): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(73,24): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
   birdgame.vcxproj -> C:\Users\user\source\repos\SuperBird\birdgame\Debug\birdgame.exe
