@@ -11,7 +11,7 @@
 #define SCREEN_HEIGHT 26 // full window height. Index : [0, SCREEN_HEIGHT-1]
 #define WIN_WIDTH 70  // size of screen where game is played. contains bird and pipes
 #define MENU_WIDTH 20 // right window width MENU_WIDTH = SCREEN_WIDTH - WIN_WIDTH
-#define GAP_SIZE 7 // gap size in 1 pipe
+#define GAP_SIZE 7 // gap size in each pipe. must be greater than bird height.
 #define PIPE_DIF 45 //distance between pipes
 #define BIRD_WIDTH 6 //bird occupies 6 cells horizontally
 #define BIRD_HEIGHT 2 //bird occupies 2 cells vertically
@@ -26,8 +26,8 @@ HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
 int pipePos[2]; //
-int gapPos[2];
-int pipeFlag[2];
+int gapPos[2]; //gap[k] == m : the height of top part of pipe with index k is m
+int pipeFlag[2]; //pipe[k] == 1  : pipe with index k is currently present on screen
 char bird[BIRD_HEIGHT][BIRD_WIDTH] = { '/','-','-','o','\\',' ',
 					'|','_','_','_',' ','>' };
 int birdPos = 6; //Coordinates (row,col) of top left corner of bird = (birdPos, GAP_WALL_BIRD). Bird is always in column 1.
@@ -109,12 +109,17 @@ bool collision() {
 	if (birdPos + BIRD_HEIGHT - 1 >= SCREEN_HEIGHT - 1) { 
 		return 1;
 	}
-	//if beak of bird touches pipe
-	//if (birdPos + BIRD_WIDTH - 1 >= WIN_WIDTH - pipePos[0]) {
-	//	return 1;
-	//}
-	if (pipePos[0] >= WIN_WIDTH-BIRD_WIDTH) { //bird in pipe gap
-		if (birdPos<gapPos[0] || birdPos >gapPos[0] + GAP_SIZE) {
+	//if bird hits top part of pipe 0 before entering pipe
+	if (birdPos + BIRD_HEIGHT - 1 <= gapPos[0] && GAP_WALL_BIRD + BIRD_WIDTH >= WIN_WIDTH-pipePos[0]) {
+ 		return 1;
+	}
+	//if bird hits bottom part of pipe 0 before entering pipe
+	if (birdPos + BIRD_HEIGHT - 1 >= gapPos[0]+GAP_SIZE && GAP_WALL_BIRD + BIRD_WIDTH >= WIN_WIDTH - pipePos[0]) {
+ 		return 1;
+	}
+	//bird in pipe gap. DOES NOT WORK 
+	if (pipePos[0] >= WIN_WIDTH-BIRD_WIDTH) {
+		if (birdPos + BIRD_HEIGHT - 1 <gapPos[0] || birdPos + BIRD_HEIGHT - 1 >gapPos[0] + GAP_SIZE) {
 			return 1;
 		}
 	}
@@ -236,16 +241,16 @@ int main()
 	hidecursor(); //add to loop in play() if screen is resized.
 	srand((unsigned)time(NULL));
 	//TESTING: REMOVE
-	//drawBorder();
-	//drawBird();
-	//genPipe(0);
-	//pipeFlag[0] = 1;
-	//pipeFlag[1] = 0;
-	//pipePos[0] = pipePos[1] = 4;
-	//drawPipe(0);
-	//erasePipe(0);
-	//gotoxy( 0, SCREEN_HEIGHT + 1);
-	//system("pause");
+	drawBorder();
+	drawBird();
+	genPipe(0);
+	pipeFlag[0] = 1;
+	pipeFlag[1] = 0;
+	pipePos[0] = pipePos[1] = 4;
+	drawPipe(0);
+	erasePipe(0);
+	gotoxy( 0, SCREEN_HEIGHT + 1);
+	system("pause");
 
 	do {
 		system("cls");
