@@ -15,6 +15,7 @@
 #define PIPE_DIF 45 //distance between pipes
 #define BIRD_WIDTH 6 //bird occupies 6 cells horizontally
 #define BIRD_HEIGHT 2 //bird occupies 2 cells vertically
+#define BIRD_JUMP_HEIGHT 3 //bird can jump 3 units at once
 
 #define GAP_WALL_BIRD 2 //gap size horizontally between left wall and left part of bird. Keep at 2.
 #define PIPE_SPEED 2 // pipe moves 2 units towards bird every frame
@@ -156,6 +157,19 @@ void instructions() {
 	_getch();
 }
 
+char AI() {
+	//if bird above top part, do nothing
+	if (birdPos + BIRD_HEIGHT - 1 <= gapPos[0] ) {
+		return 1;
+	}
+	//if bird below top part of pipe 0
+	if (birdPos + BIRD_HEIGHT - 1 >= gapPos[0] + GAP_SIZE) {
+		if (birdPos - BIRD_JUMP_HEIGHT > gapPos[0]) { 
+			return 32;
+		}
+	}
+	return 0;
+}
 void play() {
 
 	birdPos = 6;
@@ -184,13 +198,14 @@ void play() {
 		if (_kbhit()) {
 			char ch = _getch();
 			if (ch == 32) { //space bar
-				birdPos -= 3; //bird jumps 3 units up
+				birdPos -= BIRD_JUMP_HEIGHT; //bird jumps 3 units up
 			}
 			if (ch == 27) { //escape key to exit game
 				break;
 			}
 		}
-
+		//char ch = AI();
+		//if (ch == 32)birdPos -= BIRD_JUMP_HEIGHT; 
 
 		drawBird();
 		drawPipe(0);
@@ -201,7 +216,8 @@ void play() {
 			return;
 		}
 
-		Sleep(100);
+		//Sleep(100);
+		Sleep(50);
 		eraseBird();
 		erasePipe(0);
 		erasePipe(1);
@@ -258,9 +274,10 @@ int main()
 		//gotoxy(10, 6); cout << " |      Flappy Bird       | ";
 		//gotoxy(10, 7); cout << " --------------------------";
 		//gotoxy(10, 9); cout << "1. Start Game";
-		//gotoxy(10, 10); cout << "2. Instructions";
-		//gotoxy(10, 11); cout << "3. Quit";
-		//gotoxy(10, 13); cout << "Select option: ";
+		//gotoxy(10, 10); cout << "2. AI Mode";
+		//gotoxy(10, 11); cout << "3. Instructions";
+		//gotoxy(10, 12); cout << "4. Quit";
+		//gotoxy(10, 14); cout << "Select option: ";
 		//char op = _getche();
 		char op = '1';
 
