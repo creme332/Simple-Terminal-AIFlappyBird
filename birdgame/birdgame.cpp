@@ -110,6 +110,7 @@ bool collision() {
 		return 1;
 	}
 	//if bird hits top part of pipe 0 before entering pipe
+	//if you want to see bird enter pipe when collision occurs replace GAP_WALL_BIRD + BIRD_WIDTH with GAP_WALL_BIRD + BIRD_WIDTH - 1
 	if (birdPos + BIRD_HEIGHT - 1 <= gapPos[0] && GAP_WALL_BIRD + BIRD_WIDTH >= WIN_WIDTH-pipePos[0]) {
  		return 1;
 	}
@@ -117,9 +118,9 @@ bool collision() {
 	if (birdPos + BIRD_HEIGHT - 1 >= gapPos[0]+GAP_SIZE && GAP_WALL_BIRD + BIRD_WIDTH >= WIN_WIDTH - pipePos[0]) {
  		return 1;
 	}
-	//bird in pipe gap. DOES NOT WORK 
+	//bird in pipe gap. Must take PIPE_WIDTH into account
 	if (pipePos[0] >= WIN_WIDTH-BIRD_WIDTH) {
-		if (birdPos + BIRD_HEIGHT - 1 <gapPos[0] || birdPos + BIRD_HEIGHT - 1 >gapPos[0] + GAP_SIZE) {
+		if (birdPos <= gapPos[0] || birdPos + BIRD_HEIGHT - 1 >= gapPos[0] + GAP_SIZE) {
 			return 1;
 		}
 	}
@@ -191,10 +192,9 @@ void play() {
 		}
 
 
-
+		drawBird();
 		drawPipe(0);
 		drawPipe(1);
-		drawBird();
 
 		if (collision() == 1) {
 			gameover();
