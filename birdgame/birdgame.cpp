@@ -20,6 +20,7 @@
 #define GAP_WALL_BIRD 2 //gap size horizontally between left wall and left part of bird. Keep at 2.
 #define PIPE_SPEED 2 // pipe moves 2 units towards bird every frame
 #define PIPE_WIDTH 3 //pipe is 3 units wide
+#define GRAVITY 1
 
 using namespace std;
 
@@ -29,7 +30,7 @@ COORD CursorPosition;
 int pipePos[2]; //
 int gapPos[2]; //gap[k] == m : the height of top part of pipe with index k is m
 int pipeFlag[2]; //pipe[k] == 1  : pipe with index k is currently present on screen
-char bird[BIRD_HEIGHT][BIRD_WIDTH] = { '/','-','-','o','\\',' ',
+char bird[BIRD_HEIGHT][BIRD_WIDTH] = { '/','-','-','O','\\',' ',
 					'|','_','_','_',' ','>' };
 int birdPos = 6; //Coordinates (row,col) of top left corner of bird = (birdPos, GAP_WALL_BIRD). Bird is always in column 1.
 int score = 0;
@@ -128,13 +129,7 @@ bool collision() {
 	return 0;
 }
 void gameover() {
-	highscore = max(highscore, score);
-	//Erase right window
-	gotoxy(WIN_WIDTH + 5, 2);cout << "           ";
-
-	gotoxy(WIN_WIDTH + 6, 2);cout << "GAME OVER!";
-	gotoxy(WIN_WIDTH + 6, 8);cout << "HighScore: " << highscore;
-	gotoxy(WIN_WIDTH + 8, 10);cout << "Press 1";
+	gotoxy(WIN_WIDTH + 8, 14);cout << "Press 1";
 	while (1) {
 		if (_kbhit()) {
 			char k = _getch();
@@ -144,17 +139,9 @@ void gameover() {
 
 }
 void updateScore() {
+	highscore = max(highscore, score);
 	gotoxy(WIN_WIDTH + 7, 5);cout << "Score: " << score << endl;
-}
-
-void instructions() {
-
-	system("cls");
-	cout << "Instructions";
-	cout << "\n----------------";
-	cout << "\n Press spacebar to make bird fly";
-	cout << "\n\nPress any key to go back to menu";
-	_getch();
+	gotoxy(WIN_WIDTH + 8, 10);cout << "Best: " << highscore;
 }
 
 char AI() {
@@ -170,42 +157,95 @@ char AI() {
 	}
 	return 0;
 }
-void play() {
 
-	birdPos = 6;
+void ClearTerminalText() {
+	gotoxy(SCREEN_WIDTH, SCREEN_HEIGHT);cout << "   " << endl;
+	gotoxy(10, 3);cout << "                                               " << endl;
+	gotoxy(10, 4);cout << "                                               " << endl;;
+	gotoxy(10, 5);cout << "                                               " << endl;
+	gotoxy(10, 6);cout << "                                               " << endl;
+	gotoxy(10, 7);cout << "                                               " << endl;
+
+	gotoxy(10, 9);cout << "                             " << endl;
+	gotoxy(10, 10);cout << "                             " << endl;;
+	gotoxy(10, 11);cout << "                             " << endl;
+	gotoxy(10, 12);cout << "                             " << endl;
+
+	gotoxy(10, 14);cout << "                    " << endl;
+	gotoxy(10, 15);cout << "                    "  << endl;;
+	gotoxy(10, 16);cout << "                    "  << endl;
+	gotoxy(10, 17);cout << "                    "  << endl;
+
+	gotoxy(10, 19);cout << "                           " << endl;
+	gotoxy(10, 20);cout << "                           " << endl;;
+	gotoxy(10, 21);cout << "                           " << endl;
+	gotoxy(10, 22);cout << "                           " << endl;
+}
+void InitialiseTerminal() {
+	system("cls");
 	score = 0;
+
+	drawBorder();
+	birdPos = 6;
+	drawBird();
+
 	pipeFlag[0] = 1;
 	pipeFlag[1] = 0;
 	pipePos[0] = pipePos[1] = 4;
-
-	//system("cls");
-	drawBorder();
 	genPipe(0);
 	updateScore();
+	drawPipe(0);
 
-	gotoxy(WIN_WIDTH + 5, 2);cout << "FLAPPY BIRD";
-	gotoxy(WIN_WIDTH + 6, 4);cout << "----------";
-	gotoxy(WIN_WIDTH + 6, 6);cout << "----------";
+	gotoxy(WIN_WIDTH + 6, 4);cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 6);cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 9);cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 11);cout << "-----------";
 
+	//font name : small
+	gotoxy(10,3);cout <<  " ___ _                       ___ _        _    " << endl;
+	gotoxy(10, 4);cout << "| __| |__ _ _ __ _ __ _  _  | _ |_)_ _ __| |   " << endl;;
+	gotoxy(10, 5);cout << "| _|| / _` | '_ \\ '_ \\ || | | _ \\ | '_/ _` |" << endl;
+	gotoxy(10, 6);cout << "|_| |_\\__,_| .__/ .__/\\_, | |___/_|_| \\__,_|" << endl;
+	gotoxy(10, 7);cout << "           |_|  |_|   |__/                  " << endl;
+	
+	gotoxy(10, 9);cout <<  "  _     ___ _            _   " << endl;
+	gotoxy(10, 10);cout << " / |   / __| |_ __ _ _ _| |_ " << endl;;
+	gotoxy(10,11);cout <<  " | |_  \\__ \\  _/ _` | '_|  _|" << endl;
+	gotoxy(10, 12);cout << " |_(_) |___/\\__\\__,_|_|  \\__|" << endl;
 
-	//gotoxy(10, 5);cout << "Press any key to start";
-	//_getch();
-	//gotoxy(10, 5);cout << "                      ";
+	gotoxy(10, 14);cout << "  ___       _   ___ " << endl;
+	gotoxy(10, 15);cout << " |_  )     /_\\ |_ _|" << endl;;
+	gotoxy(10, 16);cout << "  / / _   / _ \\ | | " << endl;
+	gotoxy(10, 17);cout << " /___(_) /_/ \\_\\___|" << endl;
 
+	gotoxy(10, 19);cout << "  ____     ___       _ _   " << endl;
+	gotoxy(10, 20);cout << " |__ /    / _ \\ _  _(_) |_ " << endl;;
+	gotoxy(10, 21);cout << "  |_ \\_  | (_) | || | |  _|" << endl;
+	gotoxy(10, 22);cout << " |___(_)  \\__\\\_\\_,_|_|\\__|" << endl;
+
+}
+
+void play(const bool AIMode) {
+	ClearTerminalText();
+	eraseBird();
 	while (1) {
-		birdPos += 1; //gravity effect : bird falls 1 unit down every frame
+		birdPos += GRAVITY; //DO NOT CHANGE position in loop. AI relies on this.
 
-		if (_kbhit()) {
-			char ch = _getch();
-			if (ch == 32) { //space bar
-				birdPos -= BIRD_JUMP_HEIGHT; //bird jumps 3 units up
-			}
-			if (ch == 27) { //escape key to exit game
-				break;
+		if (AIMode) {
+			char ch = AI();
+			if (ch == 32)birdPos -= BIRD_JUMP_HEIGHT; 
+		}
+		else {
+			if (_kbhit()) {
+				char ch = _getch();
+				if (ch == 32) { //space bar
+					birdPos -= BIRD_JUMP_HEIGHT; //bird jumps 3 units up
+				}
+				if (ch == 27) { //escape key to exit game
+					break;
+				}
 			}
 		}
-		//char ch = AI();
-		//if (ch == 32)birdPos -= BIRD_JUMP_HEIGHT; 
 
 		drawBird();
 		drawPipe(0);
@@ -216,8 +256,9 @@ void play() {
 			return;
 		}
 
-		//Sleep(100);
-		Sleep(50);
+		if (AIMode)Sleep(10);
+		else Sleep(75);
+
 		eraseBird();
 		erasePipe(0);
 		erasePipe(1);
@@ -252,38 +293,30 @@ void hidecursor()
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
-int main()
-{
+int main(){
 	hidecursor(); //add to loop in play() if screen is resized.
 	srand((unsigned)time(NULL));
+	InitialiseTerminal();
+
 	//TESTING: REMOVE
-	drawBorder();
-	drawBird();
-	genPipe(0);
-	pipeFlag[0] = 1;
-	pipeFlag[1] = 0;
-	pipePos[0] = pipePos[1] = 4;
-	drawPipe(0);
-	erasePipe(0);
-	gotoxy( 0, SCREEN_HEIGHT + 1);
-	system("pause");
+	//drawBorder();
+	//drawBird();
+	//genPipe(0);
+	//pipeFlag[0] = 1;
+	//pipeFlag[1] = 0;
+	//pipePos[0] = pipePos[1] = 4;
+	//drawPipe(0);
+	//erasePipe(0);
+	//gotoxy( 0, SCREEN_HEIGHT + 1);
+	//system("pause");
 
 	do {
-		system("cls");
-		//gotoxy(10, 5); cout << " -------------------------- ";
-		//gotoxy(10, 6); cout << " |      Flappy Bird       | ";
-		//gotoxy(10, 7); cout << " --------------------------";
-		//gotoxy(10, 9); cout << "1. Start Game";
-		//gotoxy(10, 10); cout << "2. AI Mode";
-		//gotoxy(10, 11); cout << "3. Instructions";
-		//gotoxy(10, 12); cout << "4. Quit";
-		//gotoxy(10, 14); cout << "Select option: ";
-		//char op = _getche();
-		char op = '1';
-
-		if (op == '1') play();
-		else if (op == '2') instructions();
-		else if (op == '3') break;
+		InitialiseTerminal();
+		gotoxy(SCREEN_WIDTH, SCREEN_HEIGHT);
+			char op = _getche();
+			if (op == '1') play(0);
+			else if (op == '2') play(1);
+			else if (op == '3') break;
 
 	} while (1);
 
