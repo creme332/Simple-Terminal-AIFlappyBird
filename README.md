@@ -1,7 +1,10 @@
 # Flappy Bird
 ![](BirdVersion1.gif)
 
-Inspired by https://github.com/AngularsCoding/Flappy-Bird
+# Inspirations #
+https://github.com/hamikm/AsciiBird
+
+https://github.com/AngularsCoding/Flappy-Bird
 # Setup # 
 Run `flappybird.cpp`
 
