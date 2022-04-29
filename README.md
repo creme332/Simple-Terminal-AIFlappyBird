@@ -1,25 +1,28 @@
-# Flappy Bird
+# AI Flappy Bird
 ![](BirdVersion1.gif)
 
 # Inspirations #
 https://github.com/hamikm/AsciiBird
 
-https://github.com/AngularsCoding/Flappy-Bird
+https://www.youtube.com/watch?v=yASrfF1C3ms
+
 # Setup # 
-Run `flappybird.cpp`
+Compile the `birdgame.cpp` file found in the `birdgame` folder.
 
 This program will not run on online compilers as it uses non standard `conio.h` and `dos.h` header files.
 
+# How to play #
+1. Single player mode : Press spacebar to jump.
+2. AI mode : watch AI bird play but keep in mind that the AI bird will never die.
+
 # Future work #
-
-- [ ] Add code explanation with diagram
-- [ ] Fix collision bug (when bird is between 2 pipes, it can partially collide with the bottom pipe.)
-- [ ] Fix pipe flickering problem using double buffering
-- [ ] Add flapping wings to [bird](https://imgur.com/gallery/gKpkYqL).
-- [ ] Add AI bird
-- [ ] Add different difficulty modes (vary gap between pipes, speed of bird, ...)
-
-# Improvements made to original source code #
 - [x] Add gameplay to README
 - [x] Remove unicode characters so that code can run on IDE not supporting unicode.
-- [x] Added code to hide flickering cursor 
+- [x] Add code to get rid of flickering cursor 
+- [x] Add AI bird
+- [x] Fix collision bug (when bird is between 2 pipes, it can partially collide with the bottom pipe.)
+
+- [ ] Add code explanation with diagram
+- [ ] Add flapping wings to [bird](https://imgur.com/gallery/gKpkYqL).
+- [ ] Add different difficulty modes (vary gap between pipes, speed of bird, ...)
+
