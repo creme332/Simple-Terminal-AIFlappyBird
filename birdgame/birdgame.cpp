@@ -11,23 +11,24 @@
 #define SCREEN_HEIGHT 26 // full window height. Index : [0, SCREEN_HEIGHT-1]
 #define WIN_WIDTH 70  // size of screen where game is played. contains bird and pipes
 #define MENU_WIDTH 20 // right window width MENU_WIDTH = SCREEN_WIDTH - WIN_WIDTH
+
 #define GAP_SIZE 7 // gap size in each pipe. must be greater than bird height.
 #define PIPE_DIF 45 //distance between pipes
+#define PIPE_SPEED 2 // pipe moves 2 units towards bird every frame
+#define PIPE_WIDTH 3 //pipe is 3 units wide
+
+#define GAP_WALL_BIRD 2 //gap size horizontally between left wall and left part of bird. Keep at 2.
 #define BIRD_WIDTH 6 //bird occupies 6 cells horizontally
 #define BIRD_HEIGHT 2 //bird occupies 2 cells vertically
 #define BIRD_JUMP_HEIGHT 3 //bird can jump 3 units at once
-
-#define GAP_WALL_BIRD 2 //gap size horizontally between left wall and left part of bird. Keep at 2.
-#define PIPE_SPEED 2 // pipe moves 2 units towards bird every frame
-#define PIPE_WIDTH 3 //pipe is 3 units wide
-#define GRAVITY 1
+#define GRAVITY 1 //bird falls 1 unit every frame
 
 using namespace std;
 
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
-int pipePos[2]; //
+int pipePos[2]; //distance of left end of pipe from right window
 int gapPos[2]; //gap[k] == m : the height of top part of pipe with index k is m
 int pipeFlag[2]; //pipe[k] == 1  : pipe with index k is currently present on screen
 char bird[BIRD_HEIGHT][BIRD_WIDTH] = { '/','-','-','O','\\',' ',
@@ -44,15 +45,15 @@ void gotoxy(int col, int row){
 void drawBorder() {
 	
 	for (int i = 0; i < SCREEN_WIDTH; i++) { 
-		gotoxy(i, 0); cout << "#"; //draw top border
-		gotoxy(i, SCREEN_HEIGHT-1); cout << "#"; //draw bottom border
+		gotoxy(i, 0); cout << "="; //draw top border
+		gotoxy(i, SCREEN_HEIGHT-1); cout << "="; //draw bottom border
 	}
 
-	for (int i = 1; i < SCREEN_HEIGHT-1; i++) {
+	for (int i = 0; i < SCREEN_HEIGHT; i++) {
 		gotoxy(0, i); cout << "|";  //draw left border
 		gotoxy(SCREEN_WIDTH-1, i); cout << "|";  //draw right border
 	}
-	for (int i = 1; i < SCREEN_HEIGHT-1; i++) { 
+	for (int i = 0; i < SCREEN_HEIGHT; i++) { 
 		gotoxy(WIN_WIDTH, i); cout << "|"; //draw separating line for right window
 	}
 
@@ -66,7 +67,7 @@ void drawPipe(int ind) {
 		for (int i = 0; i < gapPos[ind]; i++) { //draw top part of pipe
 			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
 		}
-		for (int i = gapPos[ind] + GAP_SIZE; i < SCREEN_HEIGHT - 1; i++) { //draw bottom part of pipe
+		for (int i = gapPos[ind] + GAP_SIZE; i < SCREEN_HEIGHT - 2; i++) { //draw bottom part of pipe
 			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
 		}
 	}
@@ -229,7 +230,7 @@ void play(const bool AIMode) {
 	ClearTerminalText();
 	eraseBird();
 	while (1) {
-		birdPos += GRAVITY; //DO NOT CHANGE position in loop. AI relies on this.
+		birdPos += GRAVITY; //DO NOT CHANGE position of this line in loop. AI relies on this.
 
 		if (AIMode) {
 			char ch = AI();
@@ -256,7 +257,7 @@ void play(const bool AIMode) {
 			return;
 		}
 
-		if (AIMode)Sleep(10);
+		if (AIMode)Sleep(50);
 		else Sleep(75);
 
 		eraseBird();
@@ -293,23 +294,11 @@ void hidecursor()
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
+
 int main(){
 	hidecursor(); //add to loop in play() if screen is resized.
 	srand((unsigned)time(NULL));
 	InitialiseTerminal();
-
-	//TESTING: REMOVE
-	//drawBorder();
-	//drawBird();
-	//genPipe(0);
-	//pipeFlag[0] = 1;
-	//pipeFlag[1] = 0;
-	//pipePos[0] = pipePos[1] = 4;
-	//drawPipe(0);
-	//erasePipe(0);
-	//gotoxy( 0, SCREEN_HEIGHT + 1);
-	//system("pause");
-
 	do {
 		InitialiseTerminal();
 		gotoxy(SCREEN_WIDTH, SCREEN_HEIGHT);

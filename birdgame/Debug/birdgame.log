@@ -1,5 +1,5 @@
 ﻿  birdgame.cpp
-C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(65,23): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(75,24): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
-C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(224,25): warning C4129: '_': unrecognized character escape sequence
+C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(66,23): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(76,24): warning C4805: '==': unsafe mix of type 'int' and type 'bool' in operation
+C:\Users\user\source\repos\SuperBird\birdgame\birdgame.cpp(225,25): warning C4129: '_': unrecognized character escape sequence
   birdgame.vcxproj -> C:\Users\user\source\repos\SuperBird\birdgame\Debug\birdgame.exe
