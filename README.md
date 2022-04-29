@@ -7,9 +7,9 @@ https://github.com/hamikm/AsciiBird
 https://www.youtube.com/watch?v=yASrfF1C3ms
 
 # Setup # 
-Compile the `birdgame.cpp` file found in the `birdgame` folder.
+> ⚠️ Game will work NOT work on online compilers and on Mac OS.
 
-This program will not run on online compilers as it uses non standard `conio.h` and `dos.h` header files.
+Compile the `birdgame.cpp` file found in the `birdgame` folder.
 
 # How to play #
 1. Single player mode : Press spacebar to jump.
