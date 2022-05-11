@@ -1,4 +1,7 @@
 # AI Flappy Bird
+## AI mode ##
+![](AIGif.gif)
+## Normal ##
 ![](BirdVersion1.gif)
 
 # Inspirations #
