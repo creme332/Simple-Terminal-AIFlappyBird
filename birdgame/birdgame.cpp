@@ -23,14 +23,12 @@
 #define BIRD_JUMP_HEIGHT 3 //bird can jump 3 units at once
 #define GRAVITY 1 //bird falls 1 unit every frame
 
-using namespace std;
-
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
 int pipePos[2]; //distance of left end of pipe from right window
 int gapPos[2]; //gap[k] == m : the height of top part of pipe with index k is m
-int pipeFlag[2]; //pipe[k] == 1  : pipe with index k is currently present on screen
+bool pipeFlag[2]; //pipe[k] == 1  : pipe with index k is currently present on screen
 char bird[BIRD_HEIGHT][BIRD_WIDTH] = { '/','-','-','O','\\',' ',
 					'|','_','_','_',' ','>' };
 int birdPos = 6; //Coordinates (row,col) of top left corner of bird = (birdPos, GAP_WALL_BIRD). Bird is always in column 1.
@@ -45,16 +43,16 @@ void gotoxy(int col, int row){
 void drawBorder() {
 	
 	for (int i = 0; i < SCREEN_WIDTH; i++) { 
-		gotoxy(i, 0); cout << "="; //draw top border
-		gotoxy(i, SCREEN_HEIGHT-1); cout << "="; //draw bottom border
+		gotoxy(i, 0); std::cout << "="; //draw top border
+		gotoxy(i, SCREEN_HEIGHT-1); std::cout << "="; //draw bottom border
 	}
 
 	for (int i = 0; i < SCREEN_HEIGHT; i++) {
-		gotoxy(0, i); cout << "|";  //draw left border
-		gotoxy(SCREEN_WIDTH-1, i); cout << "|";  //draw right border
+		gotoxy(0, i); std::cout << "|";  //draw left border
+		gotoxy(SCREEN_WIDTH-1, i); std::cout << "|";  //draw right border
 	}
 	for (int i = 0; i < SCREEN_HEIGHT; i++) { 
-		gotoxy(WIN_WIDTH, i); cout << "|"; //draw separating line for right window
+		gotoxy(WIN_WIDTH, i); std::cout << "|"; //draw separating line for right window
 	}
 
 }
@@ -65,20 +63,20 @@ void genPipe(int ind) {
 void drawPipe(int ind) {
 	if (pipeFlag[ind] == true) {
 		for (int i = 0; i < gapPos[ind]; i++) { //draw top part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
+			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); std::cout << "###";
 		}
 		for (int i = gapPos[ind] + GAP_SIZE; i < SCREEN_HEIGHT - 2; i++) { //draw bottom part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); cout << "###";
+			gotoxy(WIN_WIDTH - pipePos[ind], i + 1); std::cout << "###";
 		}
 	}
 }
 void erasePipe(int ind) {
  	if (pipeFlag[ind] == true) {
 		for (int i = 1; i < gapPos[ind]+1; i++) { //erase top part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i); cout << "   ";
+			gotoxy(WIN_WIDTH - pipePos[ind], i); std::cout << "   ";
 		}
 		for (int i = 1+gapPos[ind] + GAP_SIZE; i < SCREEN_HEIGHT - 1; i++) { //erase bottom part of pipe
-			gotoxy(WIN_WIDTH - pipePos[ind], i); cout << "   ";
+			gotoxy(WIN_WIDTH - pipePos[ind], i); std::cout << "   ";
 		}
 	}
 }
@@ -90,7 +88,7 @@ void drawBird() {
 			int col = j + GAP_WALL_BIRD;
 			//draw only part of bird which is valid. This is important when collision occurs.
 			if (col >= 0 && row >= 0 && col < SCREEN_WIDTH && row < SCREEN_HEIGHT) { 
-				gotoxy(col, row); cout << bird[i][j];
+				gotoxy(col, row); std::cout << bird[i][j];
 			}
 		}
 	}
@@ -98,7 +96,7 @@ void drawBird() {
 void eraseBird() {
 	for (int i = 0; i < 2; i++) {
 		for (int j = 0; j < 6; j++) {
-			gotoxy(j + 2, i + birdPos); cout << " ";
+			gotoxy(j + 2, i + birdPos); std::cout << " ";
 		}
 	}
 }
@@ -130,7 +128,7 @@ bool collision() {
 	return 0;
 }
 void gameover() {
-	gotoxy(WIN_WIDTH + 8, 14);cout << "Press 1";
+	gotoxy(WIN_WIDTH + 8, 14);std::cout << "Press 1";
 	while (1) {
 		if (_kbhit()) {
 			char k = _getch();
@@ -141,8 +139,8 @@ void gameover() {
 }
 void updateScore() {
 	highscore = max(highscore, score);
-	gotoxy(WIN_WIDTH + 7, 5);cout << "Score: " << score << endl;
-	gotoxy(WIN_WIDTH + 8, 10);cout << "Best: " << highscore;
+	gotoxy(WIN_WIDTH + 7, 5);std::cout << "Score: " << score << std::endl;
+	gotoxy(WIN_WIDTH + 8, 10);std::cout << "Best: " << highscore;
 }
 
 char AI() {
@@ -160,27 +158,27 @@ char AI() {
 }
 
 void ClearTerminalText() {
-	gotoxy(SCREEN_WIDTH, SCREEN_HEIGHT);cout << "   " << endl;
-	gotoxy(10, 3);cout << "                                               " << endl;
-	gotoxy(10, 4);cout << "                                               " << endl;;
-	gotoxy(10, 5);cout << "                                               " << endl;
-	gotoxy(10, 6);cout << "                                               " << endl;
-	gotoxy(10, 7);cout << "                                               " << endl;
+	gotoxy(SCREEN_WIDTH, SCREEN_HEIGHT);std::cout << "   " << std::endl;
+	gotoxy(10, 3);std::cout << "                                               " << std::endl;
+	gotoxy(10, 4);std::cout << "                                               " << std::endl;
+	gotoxy(10, 5);std::cout << "                                               " << std::endl;
+	gotoxy(10, 6);std::cout << "                                               " << std::endl;
+	gotoxy(10, 7);std::cout << "                                               " << std::endl;
 
-	gotoxy(10, 9);cout << "                             " << endl;
-	gotoxy(10, 10);cout << "                             " << endl;;
-	gotoxy(10, 11);cout << "                             " << endl;
-	gotoxy(10, 12);cout << "                             " << endl;
+	gotoxy(10, 9);std::cout << "                             " << std::endl;
+	gotoxy(10, 10);std::cout << "                             " << std::endl;
+	gotoxy(10, 11);std::cout << "                             " << std::endl;
+	gotoxy(10, 12);std::cout << "                             " << std::endl;
 
-	gotoxy(10, 14);cout << "                    " << endl;
-	gotoxy(10, 15);cout << "                    "  << endl;;
-	gotoxy(10, 16);cout << "                    "  << endl;
-	gotoxy(10, 17);cout << "                    "  << endl;
+	gotoxy(10, 14);std::cout << "                    " << std::endl;
+	gotoxy(10, 15);std::cout << "                    "  << std::endl;
+	gotoxy(10, 16);std::cout << "                    "  << std::endl;
+	gotoxy(10, 17);std::cout << "                    "  << std::endl;
 
-	gotoxy(10, 19);cout << "                           " << endl;
-	gotoxy(10, 20);cout << "                           " << endl;;
-	gotoxy(10, 21);cout << "                           " << endl;
-	gotoxy(10, 22);cout << "                           " << endl;
+	gotoxy(10, 19);std::cout << "                           " << std::endl;
+	gotoxy(10, 20);std::cout << "                           " << std::endl;
+	gotoxy(10, 21);std::cout << "                           " << std::endl;
+	gotoxy(10, 22);std::cout << "                           " << std::endl;
 }
 void InitialiseTerminal() {
 	system("cls");
@@ -197,32 +195,32 @@ void InitialiseTerminal() {
 	updateScore();
 	drawPipe(0);
 
-	gotoxy(WIN_WIDTH + 6, 4);cout << "-----------";
-	gotoxy(WIN_WIDTH + 6, 6);cout << "-----------";
-	gotoxy(WIN_WIDTH + 6, 9);cout << "-----------";
-	gotoxy(WIN_WIDTH + 6, 11);cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 4);std::cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 6);std::cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 9);std::cout << "-----------";
+	gotoxy(WIN_WIDTH + 6, 11);std::cout << "-----------";
 
 	//font name : small
-	gotoxy(10,3);cout <<  " ___ _                       ___ _        _    " << endl;
-	gotoxy(10, 4);cout << "| __| |__ _ _ __ _ __ _  _  | _ |_)_ _ __| |   " << endl;;
-	gotoxy(10, 5);cout << "| _|| / _` | '_ \\ '_ \\ || | | _ \\ | '_/ _` |" << endl;
-	gotoxy(10, 6);cout << "|_| |_\\__,_| .__/ .__/\\_, | |___/_|_| \\__,_|" << endl;
-	gotoxy(10, 7);cout << "           |_|  |_|   |__/                  " << endl;
+	gotoxy(10,3);std::cout <<  " ___ _                       ___ _        _    " << std::endl;
+	gotoxy(10, 4);std::cout << "| __| |__ _ _ __ _ __ _  _  | _ |_)_ _ __| |   " << std::endl;
+	gotoxy(10, 5);std::cout << "| _|| / _` | '_ \\ '_ \\ || | | _ \\ | '_/ _` |" << std::endl;
+	gotoxy(10, 6);std::cout << "|_| |_\\__,_| .__/ .__/\\_, | |___/_|_| \\__,_|" << std::endl;
+	gotoxy(10, 7);std::cout << "           |_|  |_|   |__/                  " << std::endl;
 	
-	gotoxy(10, 9);cout <<  "  _     ___ _            _   " << endl;
-	gotoxy(10, 10);cout << " / |   / __| |_ __ _ _ _| |_ " << endl;;
-	gotoxy(10,11);cout <<  " | |_  \\__ \\  _/ _` | '_|  _|" << endl;
-	gotoxy(10, 12);cout << " |_(_) |___/\\__\\__,_|_|  \\__|" << endl;
+	gotoxy(10, 9);std::cout <<  "  _     ___ _            _   " << std::endl;
+	gotoxy(10, 10);std::cout << " / |   / __| |_ __ _ _ _| |_ " << std::endl;
+	gotoxy(10,11);std::cout <<  " | |_  \\__ \\  _/ _` | '_|  _|" << std::endl;
+	gotoxy(10, 12);std::cout << " |_(_) |___/\\__\\__,_|_|  \\__|" << std::endl;
 
-	gotoxy(10, 14);cout << "  ___       _   ___ " << endl;
-	gotoxy(10, 15);cout << " |_  )     /_\\ |_ _|" << endl;;
-	gotoxy(10, 16);cout << "  / / _   / _ \\ | | " << endl;
-	gotoxy(10, 17);cout << " /___(_) /_/ \\_\\___|" << endl;
+	gotoxy(10, 14);std::cout << "  ___       _   ___ " << std::endl;
+	gotoxy(10, 15);std::cout << " |_  )     /_\\ |_ _|" << std::endl;
+	gotoxy(10, 16);std::cout << "  / / _   / _ \\ | | " << std::endl;
+	gotoxy(10, 17);std::cout << " /___(_) /_/ \\_\\___|" << std::endl;
 
-	gotoxy(10, 19);cout << "  ____     ___       _ _   " << endl;
-	gotoxy(10, 20);cout << " |__ /    / _ \\ _  _(_) |_ " << endl;;
-	gotoxy(10, 21);cout << "  |_ \\_  | (_) | || | |  _|" << endl;
-	gotoxy(10, 22);cout << " |___(_)  \\__\\\_\\_,_|_|\\__|" << endl;
+	gotoxy(10, 19);std::cout << "  ____     ___       _ _   " << std::endl;
+	gotoxy(10, 20);std::cout << " |__ /    / _ \\ _  _(_) |_ " << std::endl;
+	gotoxy(10, 21);std::cout << "  |_ \\_  | (_) | || | |  _|" << std::endl;
+	gotoxy(10, 22);std::cout << " |___(_)  \\__\\\_\\_,_|_|\\__|" << std::endl;
 
 }
 
