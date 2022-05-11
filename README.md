@@ -18,10 +18,10 @@ Compile the `birdgame.cpp` file found in the `birdgame` folder.
 # Code explanation #
 ![image](https://user-images.githubusercontent.com/65414576/165916397-9cc1dde2-31a7-45c6-b1f6-7c14948920d8.png)
 
-- At any time, there is at most 2 pipes on screen. 
-- The bird only moves vertically while the pipes moves horizontally to the left. 
+- At any time, there are at most 2 pipes on screen. 
+- The bird only moves vertically while the pipes move horizontally to the left. 
 
-- `pipe[0]` always denotes the index of the pipe closest to the bird. Once this pipe is behind the bird, it disappears.
+- `pipe[0]` always denotes the index of the pipe closest to the bird. Once this pipe is behind the bird, it is removed from screen and a new one is created.
 
 # Future work #
 - [x] Add gameplay to README
