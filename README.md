@@ -1,7 +1,7 @@
 # 🐦AI Flappy Bird
 ## 💻AI mode ##
 ![](AIGif.gif)
-## ✋ Normal ##
+## 🦽 Single player mode ##
 ![](BirdVersion1.gif)
 
 # 🌄Inspirations #
@@ -9,8 +9,8 @@ https://github.com/hamikm/AsciiBird
 
 https://www.youtube.com/watch?v=yASrfF1C3ms
 
-# Setup # 
-> ⚠️ Game will work NOT work on online compilers and on Mac OS.
+# 🚀Setup # 
+> ⚠️ Game will work NOT work on online compilers and on Mac OS because of Windows-specific libraries used.
 
 Compile the `birdgame.cpp` file found in the `birdgame` folder.
 
