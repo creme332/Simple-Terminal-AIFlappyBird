@@ -1,39 +1,28 @@
-# 🐦AI Flappy Bird
-## 💻AI mode ##
-![](AIGif.gif)
-## 🦽 Single player mode ##
-![](BirdVersion1.gif)
+![GIF showing single player mode gameplay](BirdVersion1.gif)
 
-# 🌄Inspirations #
-https://github.com/hamikm/AsciiBird
+# Usage #
+> ⚠️ Unfortunately, this game will work only on a Windows system because of some Windows-specific libraries used.
 
-https://www.youtube.com/watch?v=yASrfF1C3ms
+- Run `birdgame.cpp` using a compiler that supports C++14.
+- On startup screen, choose an option by pressing `1` or `2` or `3`.
+- When in single player mode, press `spacebar` to jump. 
+- In AI mode you can only watch AI play:
+![GIF showing AI gameplay](AIGif.gif)
 
-# 🚀Setup # 
-> ⚠️ Game will work NOT work on online compilers and on Mac OS because of Windows-specific libraries used.
 
-Compile the `birdgame.cpp` file found in the `birdgame` folder.
-
-# 📓How to play #
-1. Single player mode : Press spacebar to jump.
-2. AI mode : watch AI bird play but keep in mind that the AI bird will never die.
-
-# 📇Code explanation #
+# How it works #
 ![image](https://user-images.githubusercontent.com/65414576/165916397-9cc1dde2-31a7-45c6-b1f6-7c14948920d8.png)
 
 - At any time, there are at most 2 pipes on screen. 
 - The bird only moves vertically while the pipes move horizontally to the left. 
-
 - `pipe[0]` always denotes the index of the pipe closest to the bird. Once this pipe is behind the bird, it is removed from screen and a new one is created.
 
-# 🔮Future work #
-- [x] Add gameplay to README
-- [x] Remove unicode characters so that code can run on IDE not supporting unicode.
-- [x] Add code to get rid of flickering cursor 
-- [x] Add AI bird
-- [x] Fix collision bug (when bird is between 2 pipes, it can partially collide with the bottom pipe.)
-- [x] Add code explanation with diagram
+# Inspirations #
+https://github.com/hamikm/AsciiBird
 
+https://www.youtube.com/watch?v=yASrfF1C3ms
+
+# Future work #
 - [ ] Add flapping wings to [bird](https://imgur.com/gallery/gKpkYqL).
 - [ ] Add different difficulty modes (vary gap between pipes, speed of bird, ...)
 
